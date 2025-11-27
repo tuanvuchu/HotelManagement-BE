@@ -25,9 +25,6 @@ import bill from "./routes/bill";
 import evaluation from "./routes/evaluation";
 import payment from "./routes/payment";
 
-// import connectDB from "./config/db";
-// import { connectSQLServer } from "./config/db";
-
 dotenv.config();
 const app = express();
 
@@ -36,12 +33,8 @@ app.use(express.json());
 app.use(
   cors({
     origin: [process.env.FRONTEND_URL, process.env.ADMIN_FRONTEND_URL],
-  }),
+  })
 );
-
-// connect database
-// connectDB();
-// connectSQLServer();
 
 // routes
 app.use("/", homeRouter);
