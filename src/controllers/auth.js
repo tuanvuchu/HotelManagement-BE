@@ -19,7 +19,7 @@ export const Register = async (req, res) => {
     // check if account already exists
     const existAccount = await executeMysqlQuery(
       "SELECT * FROM Account WHERE Email = ?",
-      [email],
+      [email]
     );
     if (existAccount.length > 0) {
       return res.status(400).json({ message: "Email already exists" });
@@ -48,12 +48,12 @@ export const Register = async (req, res) => {
         account.Status,
         account.CreationDate,
         account.Deleted,
-      ],
+      ]
     );
     // find id of the account to create user
     const accountResult = await executeMysqlQuery(
       "SELECT AccountId FROM Account WHERE Email = ?",
-      [email],
+      [email]
     );
     const accountId = accountResult[0].AccountId;
 
@@ -83,7 +83,7 @@ export const Register = async (req, res) => {
         user.PhoneNumber,
         user.Address,
         user.Deleted,
-      ],
+      ]
     );
     // return
     res.status(200).json({ message: "Register successfully" });
@@ -104,8 +104,8 @@ export const Login = async (req, res) => {
     const { email, password } = data;
     // check if account already exists
     const existAccount = await executeMysqlQuery(
-      "SELECT * FROM Account WHERE Email = ?",
-      [email],
+      "SELECT * FROM Account JOIN users ON AccountId = UserId WHERE Email = ?",
+      [email]
     );
 
     if (existAccount.length === 0) {
