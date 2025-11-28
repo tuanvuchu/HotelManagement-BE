@@ -18,7 +18,7 @@ export const Register = async (req, res) => {
     const { email, password } = data;
     // check if account already exists
     const existAccount = await executeMysqlQuery(
-      "SELECT * FROM Account WHERE Email = ?",
+      "SELECT * FROM Account JOIN users ON AccountId = UserId WHERE Email = ?",
       [email]
     );
     if (existAccount.length > 0) {
