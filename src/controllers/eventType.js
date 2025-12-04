@@ -5,7 +5,7 @@ import { eventTypeSchema } from "./../schemas/eventType";
 export const getAllEventType = async (req, res) => {
   try {
     const eventTypes = await executeMysqlQuery(
-      "SELECT * FROM EventType WHERE Deleted = 0",
+      "SELECT * FROM event_type WHERE Deleted = 0"
     );
     if (eventTypes.length === 0) {
       res.status(404).send("No event types found");
@@ -22,7 +22,7 @@ export const getEventTypeById = async (req, res) => {
   try {
     const eventTypeId = req.params.id;
     const eventType = await executeMysqlQuery(
-      `SELECT * FROM EventType WHERE EventTypeID = ${eventTypeId}`,
+      `SELECT * FROM event_type WHERE EventTypeID = ${eventTypeId}`
     );
     if (eventType.length === 0) {
       res.status(404).send("No event type found");
@@ -46,8 +46,8 @@ export const createEventType = async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     await executeMysqlQuery(
-      `INSERT INTO EventType (EventTypeName, Description, Deleted) VALUES (?, ?, ?)`,
-      [eventType.EventTypeName, eventType.Description, eventType.Deleted],
+      `INSERT INTO event_type (EventTypeName, Description, Deleted) VALUES (?, ?, ?)`,
+      [eventType.EventTypeName, eventType.Description, eventType.Deleted]
     );
     res.status(200).json({ message: "Create event type successfully" });
   } catch (error) {
@@ -66,7 +66,7 @@ export const updateEventType = async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     await executeMysqlQuery(
-      `UPDATE EventType 
+      `UPDATE event_type 
        SET EventTypeName = ?, Description = ?, Deleted = ? 
        WHERE EventTypeID = ?`,
       [
@@ -74,7 +74,7 @@ export const updateEventType = async (req, res) => {
         eventType.Description,
         eventType.Deleted,
         eventType.EventTypeId,
-      ],
+      ]
     );
     res.status(200).json({ message: "Update event type successfully" });
   } catch (error) {
@@ -87,7 +87,7 @@ export const deleteEventType = async (req, res) => {
   try {
     const eventTypeId = req.params.id;
     await executeMysqlQuery(
-      `UPDATE EventType SET Deleted = 1 WHERE EventTypeID = ${eventTypeId}`,
+      `UPDATE event_type SET Deleted = 1 WHERE EventTypeID = ${eventTypeId}`
     );
     res.status(200).json({ message: "Delete EventType successfully" });
   } catch (error) {

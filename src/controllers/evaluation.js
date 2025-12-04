@@ -5,7 +5,7 @@ import { evaluationSchema } from "../schemas/evaluation";
 export const getAllEvaluations = async (req, res) => {
   try {
     const evaluations = await executeMysqlQuery(
-      "SELECT * FROM Evaluation WHERE Deleted = 0",
+      "SELECT * FROM evaluation WHERE Deleted = 0"
     );
     res.send(evaluations);
   } catch (error) {
@@ -17,8 +17,8 @@ export const getEvaluationById = async (req, res) => {
   try {
     const id = req.params.id;
     const evaluation = await executeMysqlQuery(
-      "SELECT * FROM Evaluation WHERE EvaluationId = ?",
-      [id],
+      "SELECT * FROM evaluation WHERE EvaluationId = ?",
+      [id]
     );
     if (evaluation.length === 0) {
       res.status(404).send({ message: "Evaluation not found" });
@@ -39,7 +39,7 @@ export const createEvaluation = async (req, res) => {
     const { EvaluationId, UserId, RoomId, Rating, Comment, Status, Deleted } =
       req.body;
     const query = `
-      INSERT INTO Evaluation (EvaluationId, UserId, RoomId, Rating, Comment, Status, Deleted) 
+      INSERT INTO evaluation (EvaluationId, UserId, RoomId, Rating, Comment, Status, Deleted) 
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
     const result = await executeMysqlQuery(query, [
@@ -87,7 +87,7 @@ export const updateEvaluation = async (req, res) => {
     const id = req.params.id;
     const { UserId, RoomId, Rating, Comment, Status, Deleted } = req.body;
     const query = `
-      UPDATE Evaluation 
+      UPDATE evaluation 
       SET UserId = ?, RoomId = ?, Rating = ?, Comment = ?, Status = ?, Deleted = ? 
       WHERE EvaluationId = ?
     `;
@@ -116,8 +116,8 @@ export const deleteEvaluation = async (req, res) => {
   try {
     const id = req.params.id;
     const result = await executeMysqlQuery(
-      "UPDATE Evaluation SET Deleted = 1 WHERE EvaluationId =?",
-      [id],
+      "UPDATE evaluation SET Deleted = 1 WHERE EvaluationId =?",
+      [id]
     );
     if (result.affectedRows === 0) {
       res.status(404).send({ message: "Evaluation not found" });

@@ -5,7 +5,7 @@ import { billSchema } from "../schemas/bill.js";
 export const getAllBills = async (req, res) => {
   try {
     const bills = await executeMysqlQuery(
-      "SELECT * FROM Bill WHERE Deleted = 0",
+      "SELECT * FROM bill WHERE Deleted = 0"
     );
     res.send(bills);
   } catch (error) {
@@ -17,7 +17,7 @@ export const getBillById = async (req, res) => {
   try {
     const id = req.params.id;
     const bill = await executeMysqlQuery(
-      `SELECT * FROM Bill WHERE BillId = ${id}`,
+      `SELECT * FROM bill WHERE BillId = ${id}`
     );
     res.send(bill);
   } catch (error) {
@@ -33,7 +33,7 @@ export const createBill = async (req, res) => {
     }
     const bill = new Bill(req.body);
     const query = `
-      INSERT INTO Bill (UserId, CreationDate, TotalAmount, Status, Note, Deleted)
+      INSERT INTO bill (UserId, CreationDate, TotalAmount, Status, Note, Deleted)
       VALUES (?, ?, ?, ?, ?, ?)
     `;
     const values = [
@@ -59,7 +59,7 @@ export const updateBill = async (req, res) => {
     }
     const billId = req.params.id;
     const query = `
-      UPDATE Bill
+      UPDATE bill
       SET UserId = ?, CreationDate = ?, TotalAmount = ?, Status = ?, Note = ?, Deleted = ?
       WHERE BillId = ?
     `;
@@ -86,7 +86,7 @@ export const updateBill = async (req, res) => {
 export const deleteBill = async (req, res) => {
   try {
     const billId = req.params.id;
-    const query = "UPDATE Bill SET Deleted = ? WHERE BillId = ?";
+    const query = "UPDATE bill SET Deleted = ? WHERE BillId = ?";
     const values = [true, billId];
     const result = await executeMysqlQuery(query, values);
     if (result.affectedRows === 0) {

@@ -5,7 +5,7 @@ import { roomTypeSchema } from "./../schemas/roomType";
 export const getAllRoomTypes = async (req, res) => {
   try {
     const roomTypes = await executeMysqlQuery(
-      "SELECT * FROM RoomType WHERE Deleted = 0",
+      "SELECT * FROM room_type WHERE Deleted = 0"
     );
     if (roomTypes.length === 0) {
       res.status(404).send("No room types found");
@@ -22,7 +22,7 @@ export const getRoomTypeById = async (req, res) => {
   try {
     const roomTypeId = req.params.id;
     const roomType = await executeMysqlQuery(
-      `SELECT * FROM RoomType WHERE RoomTypeID = ${roomTypeId}`,
+      `SELECT * FROM room_type WHERE RoomTypeID = ${roomTypeId}`
     );
     if (roomType.length === 0) {
       res.status(404).send("No room type found");
@@ -47,8 +47,8 @@ export const createRoomType = async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     await executeMysqlQuery(
-      `INSERT INTO RoomType (RoomTypeName, Description, Deleted) VALUES (?, ?, ?)`,
-      [roomType.RoomTypeName, roomType.Description, roomType.Deleted],
+      `INSERT INTO room_type (RoomTypeName, Description, Deleted) VALUES (?, ?, ?)`,
+      [roomType.RoomTypeName, roomType.Description, roomType.Deleted]
     );
     res.status(200).json({ message: "Create room type successfully" });
   } catch (error) {
@@ -67,7 +67,7 @@ export const updateRoomType = async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     await executeMysqlQuery(
-      `UPDATE RoomType 
+      `UPDATE room_type 
        SET RoomTypeName = ?,
            Description = ?,
            Deleted = ?
@@ -77,7 +77,7 @@ export const updateRoomType = async (req, res) => {
         roomType.Description,
         roomType.Deleted,
         roomType.RoomTypeId,
-      ],
+      ]
     );
     res.status(200).json({ message: "Update room type successfully" });
   } catch (error) {
@@ -90,7 +90,7 @@ export const deleteRoomType = async (req, res) => {
   try {
     const roomTypeId = req.params.id;
     await executeMysqlQuery(
-      `UPDATE RoomType SET Deleted = 1 WHERE RoomTypeID = ${roomTypeId}`,
+      `UPDATE room_type SET Deleted = 1 WHERE RoomTypeID = ${roomTypeId}`
     );
     res.status(200).json({ message: "Delete room type successfully" });
   } catch (error) {

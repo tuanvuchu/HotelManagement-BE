@@ -5,7 +5,7 @@ import { deviceSchema } from "../schemas/device";
 export const getAllDevices = async (req, res) => {
   try {
     const devices = await executeMysqlQuery(
-      "SELECT * FROM Device WHERE Deleted = 0",
+      "SELECT * FROM device WHERE Deleted = 0"
     );
     if (devices.length === 0) {
       res.status(404).send("No devices found");
@@ -21,7 +21,7 @@ export const getDeviceById = async (req, res) => {
   try {
     const deviceId = parseInt(req.params.id);
     const device = await executeMysqlQuery(
-      `SELECT * FROM Device WHERE DeviceId = ${deviceId}`,
+      `SELECT * FROM device WHERE DeviceId = ${deviceId}`
     );
     if (device.length === 0) {
       res.status(404).send("Device not found");
@@ -43,7 +43,7 @@ export const createDevice = async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
     await executeMysqlQuery(
-      `INSERT INTO Device (DeviceName, DeviceTypeId, RoomId, DeviceImage, Price, Status, Description, Deleted)
+      `INSERT INTO device (DeviceName, DeviceTypeId, RoomId, DeviceImage, Price, Status, Description, Deleted)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         device.DeviceName,
@@ -54,7 +54,7 @@ export const createDevice = async (req, res) => {
         device.Status,
         device.Description,
         device.Deleted,
-      ],
+      ]
     );
     res.status(201).send({ message: "Device created successfully" });
   } catch (error) {
@@ -73,7 +73,7 @@ export const updateDevice = async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
     await executeMysqlQuery(
-      `UPDATE Device 
+      `UPDATE device 
            SET DeviceName = ?,
                DeviceTypeId = ?,
                RoomId = ?,
@@ -93,7 +93,7 @@ export const updateDevice = async (req, res) => {
         device.Description,
         device.Deleted,
         device.DeviceId,
-      ],
+      ]
     );
     res.send({ message: "Device updated successfully" });
   } catch (error) {
@@ -106,7 +106,7 @@ export const deleteDevice = async (req, res) => {
   try {
     const deviceId = parseInt(req.params.id);
     await executeMysqlQuery(
-      `UPDATE Device SET Deleted = 1 WHERE DeviceId = ${deviceId}`,
+      `UPDATE device SET Deleted = 1 WHERE DeviceId = ${deviceId}`
     );
     res.send({ message: "Device deleted successfully" });
   } catch (error) {

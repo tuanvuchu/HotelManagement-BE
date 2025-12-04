@@ -8,7 +8,8 @@
     "dev": "vite",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "knip": "knip"
   },
   "keywords": [],
   "author": "",
@@ -29,8 +30,11 @@
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
+    "@types/node": "^24.10.1",
     "jest": "^30.2.0",
+    "knip": "^5.71.0",
     "supertest": "^7.1.4",
+    "typescript": "^5.9.3",
     "vite-plugin-node": "^7.0.0"
   }
 }

@@ -5,7 +5,7 @@ import { eventSchema } from "./../schemas/event";
 export const getEvents = async (req, res) => {
   try {
     const events = await executeMysqlQuery(
-      "SELECT * FROM Event WHERE Deleted = 0",
+      "SELECT * FROM event WHERE Deleted = 0"
     );
     if (events.length === 0) {
       res.status(404).send("No events found");
@@ -21,7 +21,7 @@ export const getEvents = async (req, res) => {
 export const getEventById = async (req, res) => {
   try {
     const eventId = req.params.id;
-    const query = "SELECT * FROM Event WHERE EventId = @EventId";
+    const query = "SELECT * FROM event WHERE EventId = @EventId";
     const event = await executeMysqlQuery(query, { EventId: eventId });
     if (event.length === 0) {
       res.status(404).send("No event found");
@@ -43,7 +43,7 @@ export const createEvent = async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     await executeMysqlQuery(
-      `INSERT INTO Event (
+      `INSERT INTO event (
          EventName, 
          EventTypeId, 
          EventImage, 
@@ -68,7 +68,7 @@ export const createEvent = async (req, res) => {
         event.Status,
         event.Description,
         event.Deleted,
-      ],
+      ]
     );
     res.status(200).json({ message: "Create event successfully" });
   } catch (error) {
@@ -87,7 +87,7 @@ export const updateEvent = async (req, res) => {
     }
     const event = new Event(req.body);
     await executeMysqlQuery(
-      `UPDATE Event 
+      `UPDATE event 
        SET EventName = ?,
            EventTypeId = ?,
            EventImage = ?,
@@ -113,7 +113,7 @@ export const updateEvent = async (req, res) => {
         event.Description,
         event.Deleted,
         event.EventId,
-      ],
+      ]
     );
     res.send("Event updated successfully");
   } catch (err) {
@@ -125,7 +125,7 @@ export const updateEvent = async (req, res) => {
 export const deleteEvent = async (req, res) => {
   try {
     const eventId = req.params.id;
-    await executeMysqlQuery("UPDATE Event SET Deleted = 1 WHERE EventId = ?", [
+    await executeMysqlQuery("UPDATE event SET Deleted = 1 WHERE EventId = ?", [
       eventId,
     ]);
     res.send("Event deleted successfully");

@@ -7,7 +7,7 @@ import { userSchema } from "../schemas/user";
 export const getAllUsers = async (req, res) => {
   try {
     const users = await executeMysqlQuery(
-      "SELECT * FROM Users WHERE Deleted = 0",
+      "SELECT * FROM users WHERE Deleted = 0"
     );
     res.send(users);
   } catch (error) {
@@ -20,7 +20,7 @@ export const getUserById = async (req, res) => {
   try {
     const id = req.params.id;
     const user = await executeMysqlQuery(
-      `SELECT * FROM Users WHERE UserId = ${id}`,
+      `SELECT * FROM users WHERE UserId = ${id}`
     );
     res.send(user);
   } catch (error) {
@@ -42,7 +42,7 @@ export const createUser = async (req, res) => {
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash("123456", salt);
     await executeMysqlQuery(
-      `INSERT INTO Account (AccountName, Password, Role, Email, Status, CreationDate, Deleted) 
+      `INSERT INTO account (AccountName, Password, Role, Email, Status, CreationDate, Deleted) 
           VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         user.UserName,
@@ -52,16 +52,16 @@ export const createUser = async (req, res) => {
         "Offline",
         "2025-03-11",
         false,
-      ],
+      ]
     );
     // find id of the account to create user
     const accountResult = await executeMysqlQuery(
       "SELECT AccountId FROM Account WHERE Email = ?",
-      [user.UserName + "@gmail.com"],
+      [user.UserName + "@gmail.com"]
     );
     const accountId = accountResult[0].AccountId;
     await executeMysqlQuery(
-      `INSERT INTO Users (UserId, IdentificationNumber, UserName, UserImage, DateOfBirth, Gender, PhoneNumber, Address, Deleted) 
+      `INSERT INTO users (UserId, IdentificationNumber, UserName, UserImage, DateOfBirth, Gender, PhoneNumber, Address, Deleted) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         accountId,
@@ -73,7 +73,7 @@ export const createUser = async (req, res) => {
         user.PhoneNumber,
         user.Address,
         user.Deleted,
-      ],
+      ]
     );
     res.send({ message: "Created user successfully" });
   } catch (error) {
@@ -92,7 +92,7 @@ export const updateUser = async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     await executeMysqlQuery(
-      `UPDATE Users 
+      `UPDATE users 
        SET IdentificationNumber = ?, 
            UserName = ?, 
            UserImage = ?,
@@ -112,7 +112,7 @@ export const updateUser = async (req, res) => {
         user.Address,
         user.Deleted,
         user.UserId,
-      ],
+      ]
     );
     res.send({ message: "Updated user successfully" });
   } catch (error) {
@@ -125,7 +125,7 @@ export const deleteUser = async (req, res) => {
   try {
     const id = req.params.id;
     await executeMysqlQuery(
-      `UPDATE Users SET Deleted = 1 WHERE UserId = ${id}`,
+      `UPDATE users SET Deleted = 1 WHERE UserId = ${id}`
     );
     res.send({ message: "Deleted user successfully" });
   } catch (error) {

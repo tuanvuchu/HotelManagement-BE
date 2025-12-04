@@ -7,7 +7,7 @@ import { staffSchema } from "../schemas/staff";
 export const getAllStaff = async (req, res) => {
   try {
     const staffs = await executeMysqlQuery(
-      "SELECT * FROM Staff WHERE Deleted = 0",
+      "SELECT * FROM staff WHERE Deleted = 0"
     );
     res.send(staffs);
   } catch (error) {
@@ -20,7 +20,7 @@ export const getStaffById = async (req, res) => {
   try {
     const id = req.params.id;
     const staff = await executeMysqlQuery(
-      `SELECT * FROM Staff WHERE StaffId = ${id}`,
+      `SELECT * FROM staff WHERE StaffId = ${id}`
     );
     res.send(staff);
   } catch (error) {
@@ -41,7 +41,7 @@ export const createStaff = async (req, res) => {
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash("123456", salt);
     await executeMysqlQuery(
-      `INSERT INTO Account (AccountName, Password, Role, Email, Status, CreationDate, Deleted) 
+      `INSERT INTO account (AccountName, Password, Role, Email, Status, CreationDate, Deleted) 
       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         staff.StaffName,
@@ -51,12 +51,12 @@ export const createStaff = async (req, res) => {
         "Offline",
         "2025-03-11",
         false,
-      ],
+      ]
     );
     // find id of the account to create staff
     const accountResult = await executeMysqlQuery(
-      "SELECT AccountId FROM Account WHERE Email = ?",
-      [staff.StaffName + "@gmail.com"],
+      "SELECT AccountId FROM account WHERE Email = ?",
+      [staff.StaffName + "@gmail.com"]
     );
     const accountId = accountResult[0].AccountId;
     const dateOfBirth = req.body.DateOfBirth
@@ -66,7 +66,7 @@ export const createStaff = async (req, res) => {
       ? req.body.WorkStartDate.slice(0, 19).replace("T", " ")
       : new Date().toISOString().slice(0, 19).replace("T", " ");
     await executeMysqlQuery(
-      `INSERT INTO Staff 
+      `INSERT INTO staff 
          (StaffId, StaffName, StaffImage, DateOfBirth, Gender, PhoneNumber, Address, Position, Salary, Status, WorkStartDate, Description, Deleted)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -83,7 +83,7 @@ export const createStaff = async (req, res) => {
         workStartDate,
         staff.Description,
         staff.Deleted,
-      ],
+      ]
     );
     res.send({ message: "Created Staff successfully" });
   } catch (error) {
@@ -108,7 +108,7 @@ export const updateStaff = async (req, res) => {
       ? req.body.WorkStartDate.slice(0, 19).replace("T", " ")
       : new Date().toISOString().slice(0, 19).replace("T", " ");
     await executeMysqlQuery(
-      `UPDATE Staff SET StaffName =?, StaffImage=?, DateOfBirth =?, Gender =?, PhoneNumber =?, Address =?, Position =?, Salary =?, Status =?, WorkStartDate =?, Description =?, Deleted =? WHERE StaffId =?`,
+      `UPDATE staff SET StaffName =?, StaffImage=?, DateOfBirth =?, Gender =?, PhoneNumber =?, Address =?, Position =?, Salary =?, Status =?, WorkStartDate =?, Description =?, Deleted =? WHERE StaffId =?`,
       [
         staff.StaffName,
         staff.StaffImage,
@@ -123,7 +123,7 @@ export const updateStaff = async (req, res) => {
         staff.Description,
         staff.Deleted,
         staff.StaffId,
-      ],
+      ]
     );
     res.send({ message: "Updated Staff successfully" });
   } catch (error) {
@@ -135,7 +135,7 @@ export const updateStaff = async (req, res) => {
 export const deleteStaff = async (req, res) => {
   try {
     const id = req.params.id;
-    await executeMysqlQuery("UPDATE Staff SET Deleted = 1 WHERE StaffId =?", [
+    await executeMysqlQuery("UPDATE staff SET Deleted = 1 WHERE StaffId =?", [
       id,
     ]);
     res.send({ message: "Deleted Staff successfully" });

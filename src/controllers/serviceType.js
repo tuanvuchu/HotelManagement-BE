@@ -5,7 +5,7 @@ import { serviceTypeSchema } from "./../schemas/serviceType";
 export const getAllServiceType = async (req, res) => {
   try {
     const serviceTypes = await executeMysqlQuery(
-      "SELECT * FROM ServiceType WHERE Deleted = 0",
+      "SELECT * FROM service_type WHERE Deleted = 0"
     );
     if (serviceTypes.length === 0) {
       res.status(404).send("No service types found");
@@ -22,7 +22,7 @@ export const getServiceTypeById = async (req, res) => {
   try {
     const serviceTypeId = req.params.id;
     const serviceType = await executeMysqlQuery(
-      `SELECT * FROM ServiceType WHERE ServiceTypeID = ${serviceTypeId}`,
+      `SELECT * FROM service_type WHERE ServiceTypeID = ${serviceTypeId}`
     );
     if (serviceType.length === 0) {
       res.status(404).send("No service type found");
@@ -45,12 +45,12 @@ export const createServiceType = async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     await executeMysqlQuery(
-      `INSERT INTO ServiceType (ServiceTypeName, Description, Deleted) VALUES (?, ?, ?)`,
+      `INSERT INTO service_type (ServiceTypeName, Description, Deleted) VALUES (?, ?, ?)`,
       [
         serviceType.ServiceTypeName,
         serviceType.Description,
         serviceType.Deleted,
-      ],
+      ]
     );
     res.status(200).json({ message: "Create service type successfully" });
   } catch (error) {
@@ -69,14 +69,14 @@ export const updateServiceType = async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
     await executeMysqlQuery(
-      `UPDATE ServiceType 
+      `UPDATE service_type 
        SET ServiceTypeName = ?, Description = ? 
        WHERE ServiceTypeID = ?`,
       [
         serviceType.ServiceTypeName,
         serviceType.Description,
         serviceType.ServiceTypeId,
-      ],
+      ]
     );
     res.status(200).json({ message: "Update service type successfully" });
   } catch (error) {
@@ -89,7 +89,7 @@ export const deleteServiceType = async (req, res) => {
   try {
     const serviceTypeId = req.params.id;
     await executeMysqlQuery(
-      `UPDATE ServiceType SET Deleted = 1 WHERE ServiceTypeID = ${serviceTypeId}`,
+      `UPDATE service_type SET Deleted = 1 WHERE ServiceTypeID = ${serviceTypeId}`
     );
     res.status(200).json({ message: "Delete service type successfully" });
   } catch (error) {

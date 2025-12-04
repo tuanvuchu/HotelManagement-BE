@@ -39,7 +39,7 @@ export const Register = async (req, res) => {
       Deleted: req.body.deleted || false,
     });
     await executeMysqlQuery(
-      "INSERT INTO Account (AccountName, Password, Role, Email, Status, CreationDate, Deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO account (AccountName, Password, Role, Email, Status, CreationDate, Deleted) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [
         account.AccountName,
         hashedPassword,

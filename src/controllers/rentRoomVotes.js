@@ -5,7 +5,7 @@ import { rentRoomVotesSchema } from "../schemas/rentRoomVotes";
 export const getAllRentRoomVotes = async (req, res) => {
   try {
     const result = await executeMysqlQuery(
-      "SELECT * FROM RentRoomVotes WHERE Deleted = 0",
+      "SELECT * FROM rent_room_votes WHERE Deleted = 0"
     );
     res.status(200).json(result);
   } catch (error) {
@@ -17,8 +17,8 @@ export const getRentRoomVotesById = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await executeMysqlQuery(
-      "SELECT * FROM RentRoomVotes WHERE RentRoomVotesId =?",
-      [id],
+      "SELECT * FROM rent_room_votes WHERE RentRoomVotesId =?",
+      [id]
     );
     if (!result[0]) {
       return res.status(404).json({ message: "Rent Room Votes not found" });
@@ -48,7 +48,7 @@ export const createRentRoomVotes = async (req, res) => {
       Deleted,
     } = rentRoomVote;
     await executeMysqlQuery(
-      `INSERT INTO RentRoomVotes (
+      `INSERT INTO rent_room_votes (
           UserId,
           ActualCheckinDate,
           ActualCheckoutDate,
@@ -65,7 +65,7 @@ export const createRentRoomVotes = async (req, res) => {
         Status,
         Note,
         Deleted,
-      ],
+      ]
     );
     res.status(201).json({ message: "Created Rent Room Vote successfully" });
   } catch (error) {
@@ -93,7 +93,7 @@ export const updateRentRoomVotes = async (req, res) => {
       Deleted,
     } = rentRoomVote;
     await executeMysqlQuery(
-      `UPDATE RentRoomVotes SET
+      `UPDATE rent_room_votes SET
           UserId = ?,
           ActualCheckinDate = ?,
           ActualCheckoutDate = ?,
@@ -111,7 +111,7 @@ export const updateRentRoomVotes = async (req, res) => {
         Note,
         Deleted,
         RentRoomVotesId,
-      ],
+      ]
     );
     res.status(200).json({ message: "Updated Rent Room Vote successfully" });
   } catch (error) {
@@ -123,8 +123,8 @@ export const deleteRentRoomVotes = async (req, res) => {
   try {
     const { id } = req.params;
     await executeMysqlQuery(
-      "UPDATE RentRoomVotes SET Deleted = 1 WHERE RentRoomVotesId =?",
-      [id],
+      "UPDATE rent_room_votes SET Deleted = 1 WHERE RentRoomVotesId =?",
+      [id]
     );
     res.status(200).json({ message: "Rent Room Votes deleted successfully" });
   } catch (error) {

@@ -5,7 +5,7 @@ import { rentRoomVotesDetailSchema } from "../schemas/rentRoomVotesDetail";
 export const getAllRentRoomVotesDetail = async (req, res) => {
   try {
     const rentRoomVotesDetail = await executeMysqlQuery(
-      "SELECT * FROM RentRoomVotesDetail WHERE Deleted = 0",
+      "SELECT * FROM rent_room_votes_detail WHERE Deleted = 0"
     );
     res.send(rentRoomVotesDetail);
   } catch (error) {
@@ -17,7 +17,7 @@ export const getRentRoomVotesDetailById = async (req, res) => {
   try {
     const id = req.params.id;
     const rentRoomVotesDetail = await executeMysqlQuery(
-      `SELECT * FROM RentRoomVotesDetail WHERE RentRoomVotesDetailId = ${id}`,
+      `SELECT * FROM rent_room_votes_detail WHERE RentRoomVotesDetailId = ${id}`
     );
     if (rentRoomVotesDetail.length === 0) {
       res.status(404).send("No rent room votes detail found");
@@ -51,7 +51,7 @@ export const createRentRoomVotesDetail = async (req, res) => {
     } = rentRoomVotesDetail;
 
     await executeMysqlQuery(
-      `INSERT INTO RentRoomVotesDetail (RentRoomVotesId, RoomId, ServiceVotesId, TotalCostOfThisRoom, Note, Deleted)
+      `INSERT INTO rent_room_votes_detail (RentRoomVotesId, RoomId, ServiceVotesId, TotalCostOfThisRoom, Note, Deleted)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [
         RentRoomVotesId,
@@ -60,7 +60,7 @@ export const createRentRoomVotesDetail = async (req, res) => {
         TotalCostOfThisRoom,
         Note,
         Deleted,
-      ],
+      ]
     );
     res
       .status(201)
@@ -93,7 +93,7 @@ export const updateRentRoomVotesDetail = async (req, res) => {
     } = rentRoomVotesDetail;
 
     await executeMysqlQuery(
-      `UPDATE RentRoomVotesDetail
+      `UPDATE rent_room_votes_detail
        SET RentRoomVotesId = ?, RoomId = ?, ServiceVotesId = ?, TotalCostOfThisRoom = ?, Note = ?, Deleted = ?
        WHERE RentRoomVotesDetailId = ?`,
       [
@@ -104,7 +104,7 @@ export const updateRentRoomVotesDetail = async (req, res) => {
         Note,
         Deleted,
         RentRoomVotesDetailId,
-      ],
+      ]
     );
     res
       .status(200)
@@ -119,7 +119,7 @@ export const deleteRentRoomVotesDetail = async (req, res) => {
   try {
     const id = req.params.id;
     await executeMysqlQuery(
-      `UPDATE RentRoomVotesDetail SET Deleted = 1 WHERE RentRoomVotesDetailId = ${id}`,
+      `UPDATE rent_room_votes_detail SET Deleted = 1 WHERE RentRoomVotesDetailId = ${id}`
     );
     res.send({ message: "RentRoom votes detail deleted successfully." });
   } catch (error) {

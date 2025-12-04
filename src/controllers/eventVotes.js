@@ -5,7 +5,7 @@ import { eventVotesSchema } from "../schemas/eventVotes";
 export const getAllEventVotes = async (req, res) => {
   try {
     const eventVotes = await executeMysqlQuery(
-      "SELECT * FROM EventVotes WHERE Deleted = 0",
+      "SELECT * FROM event_votes WHERE Deleted = 0"
     );
     res.send(eventVotes);
   } catch (error) {
@@ -17,8 +17,8 @@ export const getEventVotesById = async (req, res) => {
   try {
     const { id } = req.params;
     const eventVotes = await executeMysqlQuery(
-      "SELECT * FROM EventVotes WHERE EventVotesId = ? AND Deleted = 0",
-      [id],
+      "SELECT * FROM event_votes WHERE EventVotesId = ? AND Deleted = 0",
+      [id]
     );
     if (eventVotes.length === 0) {
       res.status(404).send("No event votes found for this event");
@@ -39,7 +39,7 @@ export const createEventVotes = async (req, res) => {
     const eventVotes = new EventVotes(req.body);
 
     const query = `
-      INSERT INTO EventVotes (EventId, UserId, TotalAmount, Deleted)
+      INSERT INTO event_votes (EventId, UserId, TotalAmount, Deleted)
       VALUES (?, ?, ?, ?)
     `;
 
@@ -70,7 +70,7 @@ export const updateEventVotes = async (req, res) => {
     const { eventId, userId, totalAmount, deleted } = req.body;
 
     const query = `
-      UPDATE EventVotes
+      UPDATE event_votes
       SET EventId = ?, 
           UserId = ?, 
           TotalAmount = ?, 
@@ -100,7 +100,7 @@ export const deleteEventVotes = async (req, res) => {
   try {
     const { id } = req.params;
     const query = `
-                UPDATE EventVotes
+                UPDATE event_votes
                 SET Deleted = 1
                 WHERE EventVotesId =?
             `;

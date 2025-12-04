@@ -7,7 +7,7 @@ import { accountSchema } from "./../schemas/account";
 export const getAccounts = async (req, res) => {
   try {
     const accounts = await executeMysqlQuery(
-      "SELECT * FROM Account WHERE Deleted = 0"
+      "SELECT * FROM account WHERE Deleted = 0"
     );
     if (accounts.length === 0) {
       res.status(404).send("No accounts found");
@@ -24,7 +24,7 @@ export const getAccountById = async (req, res) => {
   try {
     const { id } = req.params;
     const account = await executeMysqlQuery(
-      "SELECT * FROM Account WHERE AccountId = ? AND Deleted = 0",
+      "SELECT * FROM account WHERE AccountId = ? AND Deleted = 0",
       [id]
     );
     if (account.length === 0) {
@@ -47,7 +47,7 @@ export const createAccount = async (req, res) => {
     }
     const account = new Account(req.body);
     const existAccount = await executeMysqlQuery(
-      "SELECT * FROM Account WHERE Email = ?",
+      "SELECT * FROM account WHERE Email = ?",
       [account.Email]
     );
     if (existAccount.length > 0) {
@@ -59,7 +59,7 @@ export const createAccount = async (req, res) => {
       ? req.body.creationDate.slice(0, 19).replace("T", " ")
       : new Date().toISOString().slice(0, 19).replace("T", " ");
     await executeMysqlQuery(
-      `INSERT INTO Account (AccountName, Password, Role, Email, Status, CreationDate, Deleted) 
+      `INSERT INTO account (AccountName, Password, Role, Email, Status, CreationDate, Deleted) 
       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         account.AccountName,
@@ -72,13 +72,13 @@ export const createAccount = async (req, res) => {
       ]
     );
     const accountResult = await executeMysqlQuery(
-      "SELECT AccountId FROM Account WHERE Email = ?",
+      "SELECT AccountId FROM account WHERE Email = ?",
       [account.Email]
     );
     const accountId = accountResult[0].AccountId;
     if (account.Role === "User") {
       await executeMysqlQuery(
-        `INSERT INTO Users (UserId, IdentificationNumber, UserName, DateOfBirth, Gender, PhoneNumber, Address, Deleted) 
+        `INSERT INTO users (UserId, IdentificationNumber, UserName, DateOfBirth, Gender, PhoneNumber, Address, Deleted) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           accountId,
@@ -99,7 +99,7 @@ export const createAccount = async (req, res) => {
         ? req.body.WorkStartDate.slice(0, 19).replace("T", " ")
         : new Date().toISOString().slice(0, 19).replace("T", " ");
       await executeMysqlQuery(
-        `INSERT INTO Staff 
+        `INSERT INTO staff 
          (StaffId, StaffName, DateOfBirth, Gender, PhoneNumber, Address, Position, Salary, Status, WorkStartDate, Description, Deleted)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
@@ -139,7 +139,7 @@ export const updateAccount = async (req, res) => {
       ? req.body.creationDate.slice(0, 19).replace("T", " ")
       : new Date().toISOString().slice(0, 19).replace("T", " ");
     await executeMysqlQuery(
-      `UPDATE Account SET AccountName =?, Password =?, Role =?, Email =?, Status =?, CreationDate =? WHERE AccountId =?`,
+      `UPDATE account SET AccountName =?, Password =?, Role =?, Email =?, Status =?, CreationDate =? WHERE AccountId =?`,
       [
         account.AccountName,
         hashedPassword,
@@ -161,7 +161,7 @@ export const deleteAccount = async (req, res) => {
   try {
     const { id } = req.params;
     await executeMysqlQuery(
-      `UPDATE Account SET Deleted = 1 WHERE AccountId =?`,
+      `UPDATE account SET Deleted = 1 WHERE AccountId =?`,
       [id]
     );
     res.send({ message: "Account deleted successfully" });
