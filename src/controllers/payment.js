@@ -1,7 +1,6 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import moment from "moment";
-import qs from "qs";
 
 // APP INFO, STK TEST: 4111 1111 1111 1111
 const config = {
